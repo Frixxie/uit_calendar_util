@@ -12,7 +12,6 @@ class Event:
         self.timestamp = timestamp
         self.desc = desc
         self.lecture = lecture
-        self.sent = False
 
     def __str__(self):
         """
@@ -94,5 +93,7 @@ if __name__ == '__main__':
     for course in courses:
         url += f"&module[]={course}"
     cu = Calendar_util(url)
+    # The next lecures for the next three days
     print(cu.get_next_lecture(60*60*24*3))
+    # The next upcoming lecture
     print(cu.get_next_upcoming_lecture())
