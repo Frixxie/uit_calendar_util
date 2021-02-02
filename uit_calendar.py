@@ -89,6 +89,47 @@ class Calendar_util:
                 break
         return upcoming_events
 
+    def get_next_col(self, lim = 60*15, filtr = []):
+        time_now = int(time.time())
+        upcoming_events = list()
+        for event in self.events:
+            if event.timestamp - time_now > 0 and event.timestamp - time_now <= lim and not event.lecture:
+                if len(filtr) > 0:
+                    for name in filtr:
+                        if re.search(name, event.desc, re.M|re.I):
+                            upcoming_events.append(event)
+                else:
+                    upcoming_events.append(event)
+            if event.timestamp - time_now > lim:
+                break
+        return upcoming_events
+
+    def get_next_upcoming_col(self):
+        time_now = int(time.time())
+        upcoming_events = list()
+        for i, event in enumerate(self.events):
+            if event.timestamp - time_now > 0 and not event.lecture:
+                upcoming_events.append(event)
+                if len(filtr) > 0:
+                    for name in filtr:
+                        if re.search(name, event.desc, re.M|re.I):
+                            upcoming_events.append(event)
+                else:
+                upcoming_events.append(event)
+                j = i
+                next_event = self.events[j + 1]
+                while event.timestamp == next_event.timestamp:
+                    next_event = self.events[j]
+                    if not next_event.lecture:
+                        if len(filtr) > 0:
+                        for name in filtr:
+                            if re.search(name, event.desc, re.M|re.I):
+                                upcoming_events.append(event)
+                        else:
+                        upcoming_events.append(next_event)
+                    j += 1
+                break
+        return upcoming_events
 
 if __name__ == '__main__':
     courses = ["INF-2900-1", "INF-2310-1", "INF-1400-1", "MAT-2300-1", "MAT-1002-1", "FIL-0700-1", "BED-2017-1"]
@@ -98,4 +139,6 @@ if __name__ == '__main__':
     cu = Calendar_util(url)
     # The next lecures for the next 24 hours
     print(cu.get_next_lecture(60*60*24))
+    print(cu.get_next_col(60*60*24, ["NT-82"]))
+    print(cu.get_next_col(60*60*24))
 
