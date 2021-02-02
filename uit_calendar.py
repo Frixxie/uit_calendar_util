@@ -59,6 +59,11 @@ class Calendar_util:
         for event in self.events:
             print(event)
 
+    def check_filtr(self, event, name):
+        if re.search(name, event.name, re.M|re.I) or re.search(name, event.desc, re.M|re.I):
+            return True 
+        return False
+
     def get_next_lecture(self, lim = 60*15):
         """
         Finds the next events within the lim, default within the next 15 min
@@ -89,14 +94,14 @@ class Calendar_util:
                 break
         return upcoming_events
 
-    def get_next_col(self, lim = 60*15, filtr = []):
+    def get_next_event(self, lim = 60*15, filtr = [], is_lecture = True):
         time_now = int(time.time())
         upcoming_events = list()
         for event in self.events:
-            if event.timestamp - time_now > 0 and event.timestamp - time_now <= lim and not event.lecture:
+            if event.timestamp - time_now > 0 and event.timestamp - time_now <= lim and event.lecture == is_lecture:
                 if len(filtr) > 0:
                     for name in filtr:
-                        if re.search(name, event.desc, re.M|re.I):
+                        if self.check_filtr(name, event):
                             upcoming_events.append(event)
                 else:
                     upcoming_events.append(event)
@@ -104,28 +109,27 @@ class Calendar_util:
                 break
         return upcoming_events
 
-    def get_next_upcoming_col(self):
+    def get_next_upcoming_event(self, filtr = [], is_lecture = True):
         time_now = int(time.time())
         upcoming_events = list()
         for i, event in enumerate(self.events):
-            if event.timestamp - time_now > 0 and not event.lecture:
-                upcoming_events.append(event)
+            if event.timestamp - time_now > 0 and event.lecture == is_lecture:
                 if len(filtr) > 0:
                     for name in filtr:
-                        if re.search(name, event.desc, re.M|re.I):
+                        if self.check_filtr(name, event):
                             upcoming_events.append(event)
                 else:
-                upcoming_events.append(event)
+                    upcoming_events.append(event)
                 j = i
                 next_event = self.events[j + 1]
                 while event.timestamp == next_event.timestamp:
                     next_event = self.events[j]
-                    if not next_event.lecture:
+                    if next_event.lecture == is_lecture:
                         if len(filtr) > 0:
-                        for name in filtr:
-                            if re.search(name, event.desc, re.M|re.I):
-                                upcoming_events.append(event)
-                        else:
+                            for name in filtr:
+                                    if self.check_filtr(next_event, name):
+                                        upcoming_events.append(next_event)
+                    else:
                         upcoming_events.append(next_event)
                     j += 1
                 break
@@ -138,7 +142,6 @@ if __name__ == '__main__':
         url += f"&module[]={course}"
     cu = Calendar_util(url)
     # The next lecures for the next 24 hours
-    print(cu.get_next_lecture(60*60*24))
-    print(cu.get_next_col(60*60*24, ["NT-82"]))
-    print(cu.get_next_col(60*60*24))
+    print(cu.get_next_lecture(60*60*24*3))
+    print(cu.get_next_event(60*60*24*3, is_lecture = True))
 
