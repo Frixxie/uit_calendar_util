@@ -17,7 +17,10 @@ class Event:
         """
         Makes it able to print
         """
-        return f"{self.name}, {time.ctime(self.timestamp)}, {self.desc}, {self.lecture}, {self.sent}"
+        return f"{self.name}, {time.ctime(self.timestamp)}, {self.desc}, {self.lecture}"
+
+    def __repr__(self):
+        return str(self)
 
 class Calendar_util:
     """
@@ -93,7 +96,6 @@ if __name__ == '__main__':
     for course in courses:
         url += f"&module[]={course}"
     cu = Calendar_util(url)
-    # The next lecures for the next three days
-    print(cu.get_next_lecture(60*60*24*3))
-    # The next upcoming lecture
-    print(cu.get_next_upcoming_lecture())
+    # The next lecures for the next 24 hours
+    print(cu.get_next_lecture(60*60*24))
+
