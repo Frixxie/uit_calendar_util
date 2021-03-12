@@ -5,7 +5,7 @@ import re
 
 class Event:
     """
-    Custom Event object
+    Adapter class
     """
     def __init__(self, name, timestamp, desc, lecture):
         self.name = name
@@ -24,7 +24,7 @@ class Event:
 
 class Calendar_util:
     """
-    Main class
+    This class pulls form the passed in url
     """
     def __init__(self, url):
         self.url = url
@@ -48,6 +48,9 @@ class Calendar_util:
         return events
 
     def update_events(self):
+        """
+        Updates the events
+        """
         self.content = requests.get(self.url).text
         self.calendar = Calendar(self.content)
         self.events = self.create_events()
@@ -60,6 +63,9 @@ class Calendar_util:
             print(event)
 
     def check_filtr(self, event, name):
+        """
+        Sub method to make the code be cleaner
+        """
         if re.search(name, event.name, re.M|re.I) or re.search(name, event.desc, re.M|re.I):
             return True 
         return False
@@ -79,6 +85,10 @@ class Calendar_util:
         return upcoming_events
 
     def get_next_upcoming_lecture(self):
+        """
+        Gets the next lecture independent of time 
+        Will always return a list
+        """
         time_now = int(time.time())
         upcoming_events = list()
         for i, event in enumerate(self.events):
@@ -95,6 +105,9 @@ class Calendar_util:
         return upcoming_events
 
     def get_next_event(self, lim = 60*15, filtr = [], is_lecture = True):
+        """
+        Gets the next event, can filter by lecure and filters
+        """
         time_now = int(time.time())
         upcoming_events = list()
         for event in self.events:
@@ -110,6 +123,9 @@ class Calendar_util:
         return upcoming_events
 
     def get_next_upcoming_event(self, filtr = [], is_lecture = True):
+        """
+        Same as above independent of time
+        """
         time_now = int(time.time())
         upcoming_events = list()
         for i, event in enumerate(self.events):
@@ -136,6 +152,9 @@ class Calendar_util:
         return upcoming_events
 
 if __name__ == '__main__':
+    """
+    Example code
+    """
     courses = ["INF-2900-1", "INF-2310-1", "INF-1400-1", "MAT-2300-1", "MAT-1002-1", "FIL-0700-1", "BED-2017-1"]
     url = "https://timeplan.uit.no/calendar.ics?sem=21v"
     for course in courses:
