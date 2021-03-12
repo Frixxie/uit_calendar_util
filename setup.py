@@ -10,8 +10,8 @@ setup(
     license='',
     packages=['uit_calendar_util'],
     install_requires=['ics',
-                    'requests',
-                    ],
+                      'requests',
+                      ],
     classifiers=[
         'Developing'
     ],
