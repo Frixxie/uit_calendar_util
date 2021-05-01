@@ -26,8 +26,10 @@ class Calendar_util:
     """
     This class pulls form the passed in url
     """
-    def __init__(self, url):
+    def __init__(self, url, courses):
         self.url = url
+        for course in courses:
+            self.url += f"&module[]={course}"
         self.response = requests.get(self.url)
         self.content = self.response.text
         self.calendar = Calendar(self.content)
@@ -67,7 +69,7 @@ class Calendar_util:
         Sub method to make the code be cleaner
         """
         if re.search(name, event.name, re.M|re.I) or re.search(name, event.desc, re.M|re.I):
-            return True 
+            return True
         return False
 
     def get_next_lecture(self, lim = 60*15):
@@ -86,7 +88,7 @@ class Calendar_util:
 
     def get_next_upcoming_lecture(self):
         """
-        Gets the next lecture independent of time 
+        Gets the next lecture independent of time
         Will always return a list
         """
         time_now = int(time.time())
@@ -157,10 +159,7 @@ if __name__ == '__main__':
     """
     courses = ["INF-2900-1", "INF-2310-1", "INF-1400-1", "MAT-2300-1", "MAT-1002-1", "FIL-0700-1", "BED-2017-1"]
     url = "https://timeplan.uit.no/calendar.ics?sem=21v"
-    for course in courses:
-        url += f"&module[]={course}"
-    cu = Calendar_util(url)
+    cu = Calendar_util(url, courses)
     # The next lecures for the next 24 hours
     print(cu.get_next_lecture(60*60*24*3))
     print(cu.get_next_event(60*60*24*3, is_lecture = True))
-
