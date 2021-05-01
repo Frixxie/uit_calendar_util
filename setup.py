@@ -15,4 +15,5 @@ setup(
     classifiers=[
         'Developing'
     ],
+    py_modules=['uit_calendar_util']
 )
