@@ -6,4 +6,4 @@ to install
 python setup.py install_lib 
 ```
 
-for useage see example.py
+for usage see example.py
