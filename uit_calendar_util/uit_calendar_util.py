@@ -52,7 +52,9 @@ class Calendar_util:
         lambdas even though it is considered "unpythonic"
         """
         def _create_event(event):
-            return Event(event.name, event.begin.timestamp, event.description, True) if re.search(r'Forelesning', event.description, re.M | re.I) or re.search(r'Lecture', event.description, re.M | re.I) else Event(event.name, event.begin.timestamp, event.description, False)
+            if re.search(r'Forelesning', event.description, re.M | re.I) or re.search(r'Lecture', event.description, re.M | re.I):
+                return Event(event.name, event.begin.timestamp, event.description, True)
+            return Event(event.name, event.begin.timestamp, event.description, False)
 
         events = list(map(_create_event, self.calendar.events))
         events.sort(key=lambda event: event.timestamp)
