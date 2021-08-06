@@ -2,7 +2,6 @@ from ics import Calendar
 import requests
 import time
 import re
-from multiprocessing import Pool
 
 
 class Event:
@@ -74,7 +73,7 @@ class Calendar_util:
         for event in self.events:
             print(event)
 
-    def check_filtr(self, event, name):
+    def _check_filtr(self, event, name):
         """
         Sub method to make the code be cleaner
         """
@@ -94,7 +93,7 @@ class Calendar_util:
 
         return list(filter(_filter_func, self.events))
 
-    def get_next_upcoming_timestamp(self) -> int:
+    def _get_next_upcoming_timestamp(self) -> int:
         time_now = int(time.time())
         for event in self.events:
             if event.timestamp - time_now > 0:
@@ -106,7 +105,7 @@ class Calendar_util:
         Gets the next lecture independent of time
         Will always return a list
         """
-        timestamp = self.get_next_upcoming_timestamp()
+        timestamp = self._get_next_upcoming_timestamp()
 
         def _filter_func(event):
             return event if event.timestamp == timestamp and event.lecture else None
@@ -123,7 +122,7 @@ class Calendar_util:
             if event.timestamp - time_now > 0 and event.timestamp - time_now <= lim and event.lecture == is_lecture:
                 if len(filtr) > 0:
                     for name in filtr:
-                        if self.check_filtr(name, event):
+                        if self._check_filtr(name, event):
                             return event
                 else:
                     return event
@@ -135,13 +134,13 @@ class Calendar_util:
         """
         Same as above independent of time
         """
-        timestamp = self.get_next_upcoming_timestamp()
+        timestamp = self._get_next_upcoming_timestamp()
 
         def _filter_func(event):
             if event.timestamp == timestamp and event.lecture == is_lecture:
                 if len(filtr) > 0:
                     for name in filtr:
-                        if self.check_filtr(name, event):
+                        if self._check_filtr(name, event):
                             return event
                 else:
                     return event
