@@ -19,6 +19,10 @@ func (e Event) String() string {
 	return fmt.Sprintf("Title: %s\nTime: %s\nDescription: %s\nLecture: %t", e.Name, e.TimeStamp, e.Description, e.Lecture)
 }
 
+func (e *Event) Error() string {
+	return fmt.Sprintf("Event instacne %s failed", e.String())
+}
+
 func newEvent(name string, timeStamp time.Time, description string, lecture bool) Event {
 	return Event{name, timeStamp, description, lecture}
 }
@@ -39,11 +43,11 @@ func getData(url string) ([]Event, error) {
 	if err != nil {
 		return nil, err
 	}
-	var res []Event
 	var regex, regex_err = regexp.Compile("Forelesning|Lecture")
 	if regex_err != nil {
 		return nil, regex_err
 	}
+	var res []Event
 	for _, e := range cal.Events {
 		if regex.Match([]byte(e.Summary)) {
 			res = append(res, newEvent(e.Summary, e.Start, e.Description, true))
@@ -71,6 +75,6 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println("Number of events:", len(res))
+	fmt.Printf("Number of events: %d\n", len(res))
 	fmt.Printf("Next event:\n%s\n", nextEvent(res))
 }
