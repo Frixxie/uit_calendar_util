@@ -22,8 +22,8 @@ func (t *TimeStamp) MarshalCSV() (string, error) {
 	return t.String(), nil
 }
 
-func (t *TimeStamp) String() string {
-	return t.Time.String()
+func (t TimeStamp) String() string {
+	return fmt.Sprintf("%d. %s %d kl %d:%d", t.Day(), t.Month(), t.Year(), t.Hour(), t.Minute())
 }
 
 func (t *TimeStamp) UnmarshalCSV(csv string) (err error) {
@@ -112,7 +112,7 @@ func ReadCsvEvents(urls []string) ([]CsvEvent, error) {
 }
 
 func (e CsvEvent) String() string {
-	return fmt.Sprintf("Title: %s\nTime: %s\nSummary: %s\n", e.Summary, e.DtStart, e.Summary)
+	return fmt.Sprintf("CourseID: %s\nTime: %s\nSummary: %s\n%s\n", e.CourseId, e.DtStart, e.Summary, e.Room)
 }
 
 func NextCsvEvent(events []CsvEvent) CsvEvent {

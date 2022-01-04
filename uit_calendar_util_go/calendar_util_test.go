@@ -14,6 +14,7 @@ func TestCSVReadEvents(t *testing.T) {
 
 	for _, event := range csv {
 		t.Log(event)
+		fmt.Println(event.Room)
 	}
 }
 
